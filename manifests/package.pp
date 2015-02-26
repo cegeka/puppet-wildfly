@@ -6,9 +6,11 @@ class wildfly::package(
   validate_re($version, '^[~+._0-9a-zA-Z:-]+$')
   validate_bool($versionlock)
 
+  $wildfly_full_version = regsubst($version, '^(\d+\.\d+\.\d+).*','\1')
   $wildfly_major_version = regsubst($version, '^(\d+\.\d+).*','\1')
-  notice("wildfly_major_version = ${wildfly_major_version}")
   $package_version = regsubst($wildfly_major_version, '\.', '', 'G')
+  notice("wildfly_major_version = ${wildfly_major_version}")
+  notice("wildfly_full_version = ${wildfly_full_version}")
 
   package { "wildfly${package_version}":
     ensure => $version
@@ -22,6 +24,12 @@ class wildfly::package(
       packagelock { "wildfly${package_version}": ensure => absent }
     }
     default: { fail('Class[Wildfly::Package]: parameter versionlock must be true or false') }
+  }
+
+  file { "/etc/init.d/wildfly${package_version}":
+    ensure  => file,
+    mode    => '0755',
+    content => template("${module_name}/etc/init.d/wildfly.erb")
   }
 
 }

@@ -26,13 +26,15 @@ class wildfly(
     versionlock => $versionlock
   }
 
-  class { 'wildfly::config': }
+  class { 'wildfly::config':
+    version    => $version
+  }
 
   class { 'wildfly::service':
-    ensure => $ensure
+    version => $version,
+    ensure  => $ensure
   }
 
   Anchor['wildfly::begin'] -> Class['Wildfly::Package'] -> Class['Wildfly::Config'] ~> Class['Wildfly::Service'] -> Anchor['wildfly::end']
 
 }
-
