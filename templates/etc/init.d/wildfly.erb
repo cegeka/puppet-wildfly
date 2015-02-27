@@ -26,7 +26,7 @@ fi
 # Set defaults.
 
 if [ -z "$JBOSS_HOME" ]; then
-	JBOSS_HOME=/opt/wildfly-<%= @wildfly_full_version %>
+	JBOSS_HOME=/opt/wildfly<%= @package_version %>
 fi
 export JBOSS_HOME
 
