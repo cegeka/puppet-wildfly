@@ -12,10 +12,10 @@ JBOSS_HOME="/opt/wildfly<%= @package_version %>"
 JBOSS_USER=wildfly
 
 ## The mode WildFly should start, standalone or domain
-JBOSS_MODE=standalone
+JBOSS_MODE=<%= @jboss_mode %>
 
 ## Configuration for standalone mode
-JBOSS_CONFIG=standalone.xml
+JBOSS_CONFIG=<%= @jboss_config %>.xml
 
 ## Configuration for domain mode
 # JBOSS_DOMAIN_CONFIG=domain.xml
@@ -29,3 +29,7 @@ SHUTDOWN_WAIT=60
 
 ## Location to keep the console log
 JBOSS_CONSOLE_LOG="/var/log/wildfly/console.log"
+
+JAVA_OPTS="-Xms64m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true"
+JAVA_OPTS="$JAVA_OPTS -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS -Djava.awt.headless=true"
+JAVA_OPTS="$JAVA_OPTS -Djboss.bind.address=<%=  @jboss_bind_address %> -Djboss.bind.address.management=<%= @jboss_bind_address_mgmt %>"
