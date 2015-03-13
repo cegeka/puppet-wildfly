@@ -32,4 +32,6 @@ class wildfly::package(
     content => template("${module_name}/etc/init.d/wildfly.erb")
   }
 
+  Package["wildfly${package_version}"] -> File["/etc/init.d/wildfly${package_version}"]
+
 }
