@@ -39,6 +39,12 @@ if [ -z "$JBOSS_CONSOLE_LOG" ]; then
 	JBOSS_CONSOLE_LOG=/var/log/wildfly/console.log
 fi
 
+if [ -z "$JAVA_OPTS" ]; then
+  JAVA_OPTS="-Xms64m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true"
+  JAVA_OPTS="$JAVA_OPTS -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS -Djava.awt.headless=true"
+fi
+export JAVA_OPTS
+
 if [ -z "$STARTUP_WAIT" ]; then
 	STARTUP_WAIT=30
 fi
