@@ -1,10 +1,10 @@
 class wildfly::config(
-  $version=undef
   $version = undef,
   $jboss_mode = 'standalone',
   $jboss_config = 'standalone',
   $jboss_bind_address = '0.0.0.0',
   $jboss_bind_address_mgmt = '0.0.0.0',
+  $users_mgmt = []
 ){
 
   validate_re($version, '^[~+._0-9a-zA-Z:-]+$')
@@ -26,6 +26,15 @@ class wildfly::config(
     mode    => '0640',
     content => template("${module_name}/etc/wildfly.conf.erb")
   }
+
+  file { "/opt/wildfly${package_version}/${jboss_mode}/configuration/mgmt-users.properties":
+    ensure  => file,
+    mode    => '0644',
+    owner   => 'wildfly',
+    group   => 'wildfly',
+    content => template("${module_name}/conf/mgmt-users.properties.erb")
+  }
+
   cron { "cleanup_old_${jboss_mode}_configuration_files":
     ensure  => present,
     command => "find /opt/wildfly${package_version}/${jboss_mode}/configuration/${jboss_mode}_xml_history -type f -mtime +14 -exec rm -rf {} \;",
@@ -39,4 +48,5 @@ class wildfly::config(
     hour    => 4,
     minute  => 0
   }
+
 }
