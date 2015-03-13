@@ -21,4 +21,9 @@ class wildfly::config(
     content => template("${module_name}/etc/sysconfig/wildfly.erb")
   }
 
+  file { "/etc/wildfly.conf":
+    ensure  => file,
+    mode    => '0640',
+    content => template("${module_name}/etc/wildfly.conf.erb")
+  }
 }
