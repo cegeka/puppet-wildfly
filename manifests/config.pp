@@ -4,6 +4,11 @@ class wildfly::config(
   $jboss_config = 'standalone',
   $jboss_bind_address = '0.0.0.0',
   $jboss_bind_address_mgmt = '0.0.0.0',
+  $jboss_min_mem = '256',
+  $jboss_max_mem = '512',
+  $jboss_perm = '128',
+  $jboss_max_perm = '192',
+  $jboss_debug = false,
   $users_mgmt = []
 ){
 
@@ -21,7 +26,7 @@ class wildfly::config(
     content => template("${module_name}/etc/sysconfig/wildfly.erb")
   }
 
-  file { "/etc/wildfly.conf":
+  file { '/etc/wildfly.conf':
     ensure  => file,
     mode    => '0640',
     content => template("${module_name}/etc/wildfly.conf.erb")
