@@ -11,13 +11,18 @@
 # Sample Usage:
 #
 class wildfly(
+  $ensure = 'running',
   $version = undef,
   $versionlock = false,
-  $ensure = 'running',
   $jboss_mode = 'standalone',
   $jboss_config = 'standalone',
   $jboss_bind_address = '0.0.0.0',
   $jboss_bind_address_mgmt = '0.0.0.0',
+  $jboss_min_mem = '256',
+  $jboss_max_mem = '512',
+  $jboss_perm = '128',
+  $jboss_max_perm = '192',
+  $jboss_debug = false,
   $users_mgmt = []
 ){
 
@@ -37,12 +42,17 @@ class wildfly(
     jboss_config            => $jboss_config,
     jboss_bind_address      => $jboss_bind_address,
     jboss_bind_address_mgmt => $jboss_bind_address_mgmt,
+    jboss_min_mem           => $jboss_min_mem,
+    jboss_max_mem           => $jboss_max_mem,
+    jboss_perm              => $jboss_perm,
+    jboss_max_perm          => $jboss_max_perm,
+    jboss_debug             => $jboss_debug,
     users_mgmt              => $users_mgmt
   }
 
   class { 'wildfly::service':
-    version => $version,
-    ensure  => $ensure
+    ensure  => $ensure,
+    version => $version
   }
 
   Anchor['wildfly::begin'] -> Class['Wildfly::Package'] -> Class['Wildfly::Config'] ~> Class['Wildfly::Service'] -> Anchor['wildfly::end']
