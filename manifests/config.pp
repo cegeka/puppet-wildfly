@@ -9,12 +9,16 @@ class wildfly::config(
   $jboss_perm = '128',
   $jboss_max_perm = '192',
   $jboss_debug = false,
-  $users_mgmt = []
+  $users_mgmt = [],
+  $newrelic_enabled = false,
+  $newrelic_agent_path = ''
 ){
 
   validate_re($version, '^[~+._0-9a-zA-Z:-]+$')
   validate_re($jboss_mode, '^standalone$|^domain$')
   validate_re($jboss_config, '^standalone$|^standalone-full$|^standalone-ha$|^standalone-full-ha$')
+  validate_bool($jboss_debug)
+  validate_bool($newrelic_enabled)
 
   $wildfly_full_version = regsubst($version, '^(\d+\.\d+\.\d+).*','\1')
   $wildfly_major_version = regsubst($version, '^(\d+\.\d+).*','\1')
