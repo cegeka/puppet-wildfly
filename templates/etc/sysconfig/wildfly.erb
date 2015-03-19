@@ -32,7 +32,10 @@ JBOSS_CONSOLE_LOG="/var/log/wildfly/console.log"
 
 JAVA_OPTS="-Xms<% @jboss_min_mem %>m -Xmx<% @jboss_max_mem %>m -XX:PermSize=<% @jboss_perm %> -XX:MaxPermSize=<% @jboss_max_perm %>m -Djava.net.preferIPv4Stack=true"
 JAVA_OPTS="$JAVA_OPTS -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS -Djava.awt.headless=true"
-JAVA_OPTS="$JAVA_OPTS -Djboss.bind.address=<%=  @jboss_bind_address %> -Djboss.bind.address.unsecure=<%=  @jboss_bind_address %> -Djboss.bind.address.management=<%= @jboss_bind_address_mgmt %>"
-<%- if @jboss_debug == true -%>
+JAVA_OPTS="$JAVA_OPTS -Djboss.bind.address=<%= @jboss_bind_address %> -Djboss.bind.address.unsecure=<%= @jboss_bind_address %> -Djboss.bind.address.management=<%= @jboss_bind_address_mgmt %>"
+<%- if @jboss_debug -%>
 JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n"
+<%- end -%>
+<%- if @newrelic_enabled -%>
+JAVA_OPTS="$JAVA_OPTS -javaagent:<%= @newrelic_agent_path %>"
 <%- end -%>
