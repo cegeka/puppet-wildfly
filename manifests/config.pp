@@ -49,12 +49,27 @@ class wildfly::config(
     group  => 'wildfly'
   }
 
+  file { $jboss_base_dir_real :
+    ensure  => directory,
+    owner   => $jboss_user,
+    group   => 'wildfly',
+    require => File[$jboss_data_dir_real]
+  }
+
+  file { $jboss_config_dir_real :
+    ensure  => directory,
+    owner   => $jboss_user,
+    group   => 'wildfly',
+    require => File[$jboss_base_dir_real]
+  }
+
   file { "${jboss_base_dir_real}/configuration/mgmt-users.properties":
     ensure  => file,
     mode    => '0644',
     owner   => $jboss_user,
     group   => 'wildfly',
     content => template("${module_name}/conf/mgmt-users.properties.erb")
+    require => File[$jboss_config_dir_real]
   }
 
   cron { "cleanup_old_${jboss_mode}_configuration_files":
