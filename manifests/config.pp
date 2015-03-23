@@ -29,7 +29,7 @@ class wildfly::config(
   $jboss_data_dir_real = "${jboss_data_dir}${package_version}"
   $jboss_base_dir_real = "${jboss_data_dir_real}/${jboss_mode}"
   $jboss_config_dir_real = "${jboss_data_dir_real}/${jboss_mode}/configuration"
-  $jboss_log_dir_real = "${jboss_data_dir_real}/${jboss_mode}/logs"
+  $jboss_log_dir_real = "${jboss_data_dir_real}/${jboss_mode}/log"
 
   file { "/etc/sysconfig/wildfly${package_version}":
     ensure  => file,
