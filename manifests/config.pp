@@ -72,13 +72,23 @@ class wildfly::config(
     require => File[$jboss_config_dir_real]
   }
 
-  file { "${jboss_base_dir_real}/configuration/${jboss_config}.properties":
+  file { "${jboss_base_dir_real}/configuration/mgmt-groups.properties":
     ensure  => file,
     mode    => '0644',
     owner   => $jboss_user,
     group   => 'wildfly',
     replace => false,
-    source  => "puppet:///modules/wildfly/${jboss_config}.properties",
+    source  => "puppet:///modules/wildfly/mgmt-groups.properties",
+    require => File[$jboss_config_dir_real]
+  }
+
+  file { "${jboss_base_dir_real}/configuration/${jboss_config}.xml":
+    ensure  => file,
+    mode    => '0644',
+    owner   => $jboss_user,
+    group   => 'wildfly',
+    replace => false,
+    source  => "puppet:///modules/wildfly/${jboss_config}.xml",
     require => File[$jboss_config_dir_real]
   }
 
@@ -89,6 +99,26 @@ class wildfly::config(
     group   => 'wildfly',
     replace => false,
     source  => "puppet:///modules/wildfly/logging.properties",
+    require => File[$jboss_config_dir_real]
+  }
+
+  file { "${jboss_base_dir_real}/configuration/application-users.properties":
+    ensure  => file,
+    mode    => '0644',
+    owner   => $jboss_user,
+    group   => 'wildfly',
+    replace => false,
+    source  => "puppet:///modules/wildfly/application-users.properties",
+    require => File[$jboss_config_dir_real]
+  }
+
+  file { "${jboss_base_dir_real}/configuration/application-roles.properties":
+    ensure  => file,
+    mode    => '0644',
+    owner   => $jboss_user,
+    group   => 'wildfly',
+    replace => false,
+    source  => "puppet:///modules/wildfly/application-roles.properties",
     require => File[$jboss_config_dir_real]
   }
 
