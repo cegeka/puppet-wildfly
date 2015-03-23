@@ -68,7 +68,7 @@ class wildfly::config(
     mode    => '0644',
     owner   => $jboss_user,
     group   => 'wildfly',
-    content => template("${module_name}/conf/mgmt-users.properties.erb")
+    content => template("${module_name}/conf/mgmt-users.properties.erb"),
     require => File[$jboss_config_dir_real]
   }
 
