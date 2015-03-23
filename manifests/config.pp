@@ -9,6 +9,8 @@ class wildfly::config(
   $jboss_perm = '128',
   $jboss_max_perm = '192',
   $jboss_debug = false,
+  $jboss_user = 'wildfly',
+  $jboss_data_dir = '/opt/wildfly',
   $users_mgmt = [],
   $newrelic_enabled = false,
   $newrelic_agent_path = ''
@@ -24,6 +26,11 @@ class wildfly::config(
   $wildfly_major_version = regsubst($version, '^(\d+\.\d+).*','\1')
   $package_version = regsubst($wildfly_major_version, '\.', '', 'G')
 
+  $jboss_data_dir_real = "${jboss_data_dir}${package_version}"
+  $jboss_base_dir_real = "${jboss_data_dir_real}/${jboss_mode}"
+  $jboss_config_dir_real = "${jboss_data_dir_real}/${jboss_mode}/configuration"
+  $jboss_log_dir_real = "${jboss_data_dir_real}/${jboss_mode}/logs"
+
   file { "/etc/sysconfig/wildfly${package_version}":
     ensure  => file,
     mode    => '0640',
@@ -36,24 +43,30 @@ class wildfly::config(
     content => template("${module_name}/etc/wildfly.conf.erb")
   }
 
-  file { "/opt/wildfly${package_version}/${jboss_mode}/configuration/mgmt-users.properties":
+  file { $jboss_data_dir_real :
+    ensure => directory,
+    owner  => $jboss_user,
+    group  => 'wildfly'
+  }
+
+  file { "${jboss_base_dir_real}/configuration/mgmt-users.properties":
     ensure  => file,
     mode    => '0644',
-    owner   => 'wildfly',
+    owner   => $jboss_user,
     group   => 'wildfly',
     content => template("${module_name}/conf/mgmt-users.properties.erb")
   }
 
   cron { "cleanup_old_${jboss_mode}_configuration_files":
     ensure  => present,
-    command => "find /opt/wildfly${package_version}/${jboss_mode}/configuration/${jboss_mode}_xml_history -type f -mtime +14 -exec rm -rf {} \;",
+    command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type f -mtime +14 -exec rm -rf {} \;",
     hour    => 2,
     minute  => 0
   }
 
   cron { "cleanup_empty_${jboss_mode}_configuration_directories":
     ensure  => present,
-    command => "find /opt/wildfly${package_version}/${jboss_mode}/configuration/${jboss_mode}_xml_history -type d -empty -exec rm -rf {} \;",
+    command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type d -empty -exec rm -rf {} \;",
     hour    => 4,
     minute  => 0
   }
