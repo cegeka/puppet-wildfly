@@ -23,6 +23,7 @@ class wildfly(
   $jboss_perm = '128',
   $jboss_max_perm = '192',
   $jboss_debug = false,
+  $jboss_user = 'wildfly',
   $users_mgmt = [],
   $newrelic_enabled = false,
   $newrelic_agent_path = ''
@@ -49,6 +50,7 @@ class wildfly(
     jboss_perm              => $jboss_perm,
     jboss_max_perm          => $jboss_max_perm,
     jboss_debug             => $jboss_debug,
+    jboss_user              => $jboss_user,
     users_mgmt              => $users_mgmt,
     newrelic_enabled        => $newrelic_enabled,
     newrelic_agent_path     => $newrelic_agent_path
