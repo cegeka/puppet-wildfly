@@ -72,6 +72,26 @@ class wildfly::config(
     require => File[$jboss_config_dir_real]
   }
 
+  file { "${jboss_base_dir_real}/configuration/${jboss_config}.properties":
+    ensure  => file,
+    mode    => '0644',
+    owner   => $jboss_user,
+    group   => 'wildfly',
+    replace => false,
+    source  => "puppet:///modules/wildfly/${jboss_config}.properties",
+    require => File[$jboss_config_dir_real]
+  }
+
+  file { "${jboss_base_dir_real}/configuration/logging.properties":
+    ensure  => file,
+    mode    => '0644',
+    owner   => $jboss_user,
+    group   => 'wildfly',
+    replace => false,
+    source  => "puppet:///modules/wildfly/logging.properties",
+    require => File[$jboss_config_dir_real]
+  }
+
   cron { "cleanup_old_${jboss_mode}_configuration_files":
     ensure  => present,
     command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type f -mtime +14 -exec rm -rf {} \;",
