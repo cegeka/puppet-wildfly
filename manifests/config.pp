@@ -29,7 +29,7 @@ class wildfly::config(
   $jboss_data_dir_real = "${jboss_data_dir}${package_version}"
   $jboss_base_dir_real = "${jboss_data_dir_real}/${jboss_mode}"
   $jboss_config_dir_real = "${jboss_data_dir_real}/${jboss_mode}/configuration"
-  $jboss_log_dir_real = "${jboss_data_dir_real}/${jboss_mode}/logs"
+  $jboss_log_dir_real = "${jboss_data_dir_real}/${jboss_mode}/log"
 
   file { "/etc/sysconfig/wildfly${package_version}":
     ensure  => file,
@@ -69,6 +69,26 @@ class wildfly::config(
     owner   => $jboss_user,
     group   => 'wildfly',
     content => template("${module_name}/conf/mgmt-users.properties.erb"),
+    require => File[$jboss_config_dir_real]
+  }
+
+  file { "${jboss_base_dir_real}/configuration/${jboss_config}.properties":
+    ensure  => file,
+    mode    => '0644',
+    owner   => $jboss_user,
+    group   => 'wildfly',
+    replace => false,
+    source  => "puppet:///modules/wildfly/${jboss_config}.properties",
+    require => File[$jboss_config_dir_real]
+  }
+
+  file { "${jboss_base_dir_real}/configuration/logging.properties":
+    ensure  => file,
+    mode    => '0644',
+    owner   => $jboss_user,
+    group   => 'wildfly',
+    replace => false,
+    source  => "puppet:///modules/wildfly/logging.properties",
     require => File[$jboss_config_dir_real]
   }
 
