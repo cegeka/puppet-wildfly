@@ -39,7 +39,7 @@ class wildfly::config(
 
   file { '/etc/wildfly.conf':
     ensure  => file,
-    mode    => '0640',
+    mode    => '0644',
     content => template("${module_name}/etc/wildfly.conf.erb")
   }
 
