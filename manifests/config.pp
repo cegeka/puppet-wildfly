@@ -10,6 +10,7 @@ class wildfly::config(
   $jboss_max_perm = '192',
   $jboss_debug = false,
   $jboss_user = 'wildfly',
+  $jboss_group = 'wildfly',
   $jboss_data_dir = '/opt/wildfly',
   $users_mgmt = [],
   $newrelic_enabled = false,
@@ -46,20 +47,20 @@ class wildfly::config(
   file { $jboss_data_dir_real :
     ensure => directory,
     owner  => $jboss_user,
-    group  => 'wildfly'
+    group  => $jboss_group
   }
 
   file { $jboss_base_dir_real :
     ensure  => directory,
     owner   => $jboss_user,
-    group   => 'wildfly',
+    group   => $jboss_group,
     require => File[$jboss_data_dir_real]
   }
 
   file { $jboss_config_dir_real :
     ensure  => directory,
     owner   => $jboss_user,
-    group   => 'wildfly',
+    group   => $jboss_group,
     require => File[$jboss_base_dir_real]
   }
 
@@ -67,7 +68,7 @@ class wildfly::config(
     ensure  => file,
     mode    => '0644',
     owner   => $jboss_user,
-    group   => 'wildfly',
+    group   => $jboss_group,
     content => template("${module_name}/conf/mgmt-users.properties.erb"),
     require => File[$jboss_config_dir_real]
   }
@@ -76,7 +77,7 @@ class wildfly::config(
     ensure  => file,
     mode    => '0644',
     owner   => $jboss_user,
-    group   => 'wildfly',
+    group   => $jboss_group,
     replace => false,
     source  => "puppet:///modules/wildfly/mgmt-groups.properties",
     require => File[$jboss_config_dir_real]
@@ -86,7 +87,7 @@ class wildfly::config(
     ensure  => file,
     mode    => '0644',
     owner   => $jboss_user,
-    group   => 'wildfly',
+    group   => $jboss_group,
     replace => false,
     source  => "puppet:///modules/wildfly/${jboss_config}.xml",
     require => File[$jboss_config_dir_real]
@@ -96,7 +97,7 @@ class wildfly::config(
     ensure  => file,
     mode    => '0644',
     owner   => $jboss_user,
-    group   => 'wildfly',
+    group   => $jboss_group,
     replace => false,
     source  => "puppet:///modules/wildfly/logging.properties",
     require => File[$jboss_config_dir_real]
@@ -106,7 +107,7 @@ class wildfly::config(
     ensure  => file,
     mode    => '0644',
     owner   => $jboss_user,
-    group   => 'wildfly',
+    group   => $jboss_group,
     replace => false,
     source  => "puppet:///modules/wildfly/application-users.properties",
     require => File[$jboss_config_dir_real]
@@ -116,7 +117,7 @@ class wildfly::config(
     ensure  => file,
     mode    => '0644',
     owner   => $jboss_user,
-    group   => 'wildfly',
+    group   => $jboss_group,
     replace => false,
     source  => "puppet:///modules/wildfly/application-roles.properties",
     require => File[$jboss_config_dir_real]
