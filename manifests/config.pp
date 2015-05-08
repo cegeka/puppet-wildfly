@@ -1,5 +1,6 @@
 class wildfly::config(
   $version = undef,
+  $java_home = '/usr/java/latest',
   $jboss_mode = 'standalone',
   $jboss_config = 'standalone',
   $jboss_bind_address = '0.0.0.0',
