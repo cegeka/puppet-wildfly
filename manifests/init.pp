@@ -11,9 +11,10 @@
 # Sample Usage:
 #
 class wildfly(
-  $ensure = 'running',
   $version = undef,
   $versionlock = false,
+  $service_state = 'running',
+  $service_enable = true,
   $java_home = '/usr/java/latest',
   $jboss_mode = 'standalone',
   $jboss_config = 'standalone',
@@ -63,8 +64,9 @@ class wildfly(
   }
 
   class { 'wildfly::service':
-    ensure  => $ensure,
-    version => $version
+    ensure  => $service_state,
+    version => $version,
+    enable  => $service_enable
   }
 
   Anchor['wildfly::begin'] -> Class['Wildfly::Package'] -> Class['Wildfly::Config'] ~> Class['Wildfly::Service'] -> Anchor['wildfly::end']
