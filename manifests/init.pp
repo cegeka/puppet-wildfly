@@ -15,6 +15,7 @@ class wildfly(
   $versionlock = false,
   $service_state = 'running',
   $service_enable = true,
+  $java_home = '/usr/java/latest',
   $jboss_mode = 'standalone',
   $jboss_config = 'standalone',
   $jboss_bind_address = '0.0.0.0',
@@ -44,6 +45,7 @@ class wildfly(
 
   class { 'wildfly::config':
     version                 => $version,
+    java_home               => $java_home,
     jboss_mode              => $jboss_mode,
     jboss_config            => $jboss_config,
     jboss_bind_address      => $jboss_bind_address,
