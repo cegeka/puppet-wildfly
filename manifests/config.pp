@@ -13,6 +13,7 @@ class wildfly::config(
   $jboss_user = 'wildfly',
   $jboss_group = 'wildfly',
   $jboss_data_dir = '/opt/wildfly',
+  $jboss_log_dir = '/data/logs/wildfly',
   $users_mgmt = [],
   $newrelic_enabled = false,
   $newrelic_agent_path = ''
@@ -31,7 +32,6 @@ class wildfly::config(
   $jboss_data_dir_real = "${jboss_data_dir}${package_version}"
   $jboss_base_dir_real = "${jboss_data_dir_real}/${jboss_mode}"
   $jboss_config_dir_real = "${jboss_data_dir_real}/${jboss_mode}/configuration"
-  $jboss_log_dir_real = "${jboss_data_dir_real}/${jboss_mode}/log"
 
   file { "/etc/sysconfig/wildfly${package_version}":
     ensure  => file,
@@ -63,6 +63,12 @@ class wildfly::config(
     owner   => $jboss_user,
     group   => $jboss_group,
     require => File[$jboss_base_dir_real]
+  }
+
+  file { $jboss_log_dir :
+    ensure  => directory,
+    owner   => $jboss_user,
+    group   => $jboss_group
   }
 
   file { "${jboss_base_dir_real}/configuration/mgmt-users.properties":
