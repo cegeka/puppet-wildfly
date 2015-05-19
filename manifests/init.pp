@@ -28,6 +28,7 @@ class wildfly(
   $jboss_user = 'wildfly',
   $jboss_group = 'wildfly',
   $jboss_data_dir = '/opt/wildfly',
+  $jboss_log_dir = undef,
   $users_mgmt = [],
   $newrelic_enabled = false,
   $newrelic_agent_path = ''
@@ -58,6 +59,7 @@ class wildfly(
     jboss_user              => $jboss_user,
     jboss_group             => $jboss_group,
     jboss_data_dir          => $jboss_data_dir,
+    jboss_log_dir           => $jboss_log_dir,
     users_mgmt              => $users_mgmt,
     newrelic_enabled        => $newrelic_enabled,
     newrelic_agent_path     => $newrelic_agent_path
