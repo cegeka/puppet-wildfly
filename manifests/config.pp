@@ -33,6 +33,12 @@ class wildfly::config(
   $jboss_base_dir_real = "${jboss_data_dir_real}/${jboss_mode}"
   $jboss_config_dir_real = "${jboss_data_dir_real}/${jboss_mode}/configuration"
 
+  if ($jboss_log_dir != undef) {
+    $jboss_log_dir_real = $jboss_log_dir
+  } else {
+    $jboss_log_dir_real = "${jboss_data_dir_real}/${jboss_mode}/log"
+  }
+
   file { "/etc/sysconfig/wildfly${package_version}":
     ensure  => file,
     mode    => '0640',
