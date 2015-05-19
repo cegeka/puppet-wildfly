@@ -13,7 +13,7 @@ class wildfly::config(
   $jboss_user = 'wildfly',
   $jboss_group = 'wildfly',
   $jboss_data_dir = '/opt/wildfly',
-  $jboss_log_dir = '/data/logs/wildfly',
+  $jboss_log_dir = undef,
   $users_mgmt = [],
   $newrelic_enabled = false,
   $newrelic_agent_path = ''
