@@ -138,14 +138,14 @@ class wildfly::config(
 
   cron { "cleanup_old_${jboss_mode}_configuration_files":
     ensure  => present,
-    command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type f -mtime +14 -exec rm -rf {} \;",
+    command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type f -mtime +14 -delete",
     hour    => 2,
     minute  => 0
   }
 
   cron { "cleanup_empty_${jboss_mode}_configuration_directories":
     ensure  => present,
-    command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type d -empty -exec rm -rf {} \;",
+    command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type d -empty -delete",
     hour    => 4,
     minute  => 0
   }
