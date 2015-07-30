@@ -29,7 +29,7 @@ JBOSS_CONFIG_DIR=<%= @jboss_config_dir_real %>
 STARTUP_WAIT=60
 
 ## The amount of time to wait for shutdown
-SHUTDOWN_WAIT=60
+SHUTDOWN_WAIT=<%= @jboss_shutdown_wait %>
 
 ## Location to keep the console log
 JBOSS_CONSOLE_LOG="/var/log/wildfly/console.log"
