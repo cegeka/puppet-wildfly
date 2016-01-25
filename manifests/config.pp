@@ -138,7 +138,7 @@ class wildfly::config(
   }
 
   logrotate::rule { 'wildfly_console':
-    path         => '/var/log/wildfly/console.log'
+    path         => '/var/log/wildfly/console.log',
     rotate       => 7,
     rotate_every => 'day',
     copytruncate => true,
