@@ -151,4 +151,15 @@ class wildfly::config(
     minute  => 0
   }
 
+  logrotate::rule { 'wildfly_console':
+    path         => '/var/log/wildfly/console.log',
+    rotate       => 7,
+    rotate_every => 'day',
+    copytruncate => true,
+    compress     => true,
+    dateext      => true,
+    missingok    => true,
+    ifempty      => true,
+  }
+
 }
