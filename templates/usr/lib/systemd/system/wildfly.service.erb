@@ -1,0 +1,18 @@
+# This file is managed by Puppet. DO NOT EDIT.
+[Unit]
+Description=The WildFly Application Server
+After=syslog.target network.target
+Before=httpd.service
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/sysconfig/wildfly<%= @package_version %>
+ExecStart=/opt/wildfly<%= @package_version %>/bin/standalone.sh -c standalone-full.xml
+User=<%= @jboss_user %>
+Restart=no
+StandardOutput=null
+ExecStopPost=/usr/bin/sleep 10
+
+[Install]
+WantedBy=multi-user.target
+Alias=wildfly.service
