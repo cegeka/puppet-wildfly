@@ -41,7 +41,7 @@ class wildfly::config(
   file { "/usr/lib/systemd/system/wildfly${package_version}.service":
     ensure  => file,
     mode    => '0644',
-    content => template("${module_name}//usr/lib/systemd/system/wildfly.service.erb"),
+    content => template("${module_name}/usr/lib/systemd/system/wildfly.service.erb"),
     notify  => Exec["reload systemctl /usr/lib/systemd/system/wildfly${package_version}.service"]
   }
 
