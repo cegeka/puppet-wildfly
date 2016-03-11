@@ -42,8 +42,14 @@ class wildfly::config(
 
   file { "/etc/sysconfig/wildfly${package_version}":
     ensure  => file,
-    mode    => '0640',
+    mode    => '0644',
     content => template("${module_name}/etc/sysconfig/wildfly.erb")
+  }
+
+  file { "/usr/lib/systemd/system/wildfly${package_version}.service":
+    ensure  => file,
+    mode    => '0644',
+    content => template("${module_name}//usr/lib/systemd/system/wildfly.service.erb")
   }
 
   file { '/etc/wildfly.conf':
