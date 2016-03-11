@@ -50,11 +50,11 @@ class wildfly::config(
     ensure  => file,
     mode    => '0644',
     content => template("${module_name}/usr/lib/systemd/system/wildfly.service.erb"),
-    notify  => Exec["reload systemctl /usr/lib/systemd/system/wildfly${package_version}.service"]
   }
 
   exec { "reload systemctl /usr/lib/systemd/system/wildfly${package_version}.service":
-    command => '/bin/systemctl daemon-reload',
+    command   => '/bin/systemctl daemon-reload',
+    subscribe => File["/usr/lib/systemd/system/wildfly${package_version}.service"]
   }
 
   file { '/etc/wildfly.conf':
