@@ -26,12 +26,14 @@ class wildfly::package(
     default: { fail('Class[Wildfly::Package]: parameter versionlock must be true or false') }
   }
 
-  file { "/etc/init.d/wildfly${package_version}":
-    ensure  => file,
-    mode    => '0755',
-    content => template("${module_name}/etc/init.d/wildfly.erb")
+  # Only create rc.d init scripts on rhel < 7
+  if ($operatingsystemmajrelease < 7) {
+    file { "/etc/init.d/wildfly${package_version}":
+      ensure  => file,
+      mode    => '0755',
+      content => template("${module_name}/etc/init.d/wildfly.erb"),
+      require => Package["wildfly${package_version}"]
+    }
   }
-
-  Package["wildfly${package_version}"] -> File["/etc/init.d/wildfly${package_version}"]
 
 }
