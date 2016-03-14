@@ -54,6 +54,7 @@ class wildfly::config(
 
   exec { "reload systemctl /usr/lib/systemd/system/wildfly${package_version}.service":
     command   => '/bin/systemctl daemon-reload',
+    onlyif    => '/usr/bin/systemctl status wildfly 2>&1 | /usr/bin/grep "changed on disk"',
     subscribe => File["/usr/lib/systemd/system/wildfly${package_version}.service"]
   }
 
