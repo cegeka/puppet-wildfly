@@ -9,8 +9,6 @@ class wildfly::package(
   $wildfly_full_version = regsubst($version, '^(\d+\.\d+\.\d+).*','\1')
   $wildfly_major_version = regsubst($version, '^(\d+\.\d+).*','\1')
   $package_version = regsubst($wildfly_major_version, '\.', '', 'G')
-  notice("wildfly_major_version = ${wildfly_major_version}")
-  notice("wildfly_full_version = ${wildfly_full_version}")
 
   package { "wildfly${package_version}":
     ensure => $version
