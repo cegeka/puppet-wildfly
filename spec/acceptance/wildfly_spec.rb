@@ -16,10 +16,10 @@ describe 'wildfly' do
         Yum::Repo <| title == 'cegeka-unsigned' |>
         Yum::Repo <| title == 'epel' |>
 
-        sunjdk::instance { 'jdk 1.8.0_77':
+        sunjdk::instance { 'jdk1.8.0_40':
           ensure      => 'present',
-          jdk_version => '1.8.0_77',
-          pkg_name    => 'jdk',
+          pkg_name    => 'jdk1.8.0_40',
+          jdk_version => '1.8.0_40-fcs',
           versionlock => true
         }
 
@@ -36,7 +36,7 @@ describe 'wildfly' do
           versionlock             => false,
           service_state           => 'running',
           service_enable          => true,
-          java_home               => '/usr/java/jdk1.8.0_77',
+          java_home               => '/usr/java/jdk1.8.0_40',
           jboss_mode              => 'standalone',
           jboss_config            => 'standalone',
           jboss_bind_address      => '0.0.0.0',
