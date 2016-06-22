@@ -10,3 +10,5 @@ mod 'profile',
   :git => 'git@github.com:cegeka/puppet-profile.git'
 mod 'sunjdk',
   :git => 'git@github.com:cegeka/puppet-sunjdk.git'
+mod 'logrotate',
+  :git => 'git@github.com:cegeka/puppet-logrotate.git'
