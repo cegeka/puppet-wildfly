@@ -46,16 +46,20 @@ class wildfly::config(
     content => template("${module_name}/etc/sysconfig/wildfly.erb")
   }
 
-  file { "/usr/lib/systemd/system/wildfly${package_version}.service":
-    ensure  => file,
-    mode    => '0644',
-    content => template("${module_name}/usr/lib/systemd/system/wildfly.service.erb"),
-  }
+  case $::operatingsystemmajrelease {
+    7: {
+      file { "/usr/lib/systemd/system/wildfly${package_version}.service":
+        ensure  => file,
+        mode    => '0644',
+        content => template("${module_name}/usr/lib/systemd/system/wildfly.service.erb"),
+      }
 
-  exec { "reload systemctl /usr/lib/systemd/system/wildfly${package_version}.service":
-    command   => '/bin/systemctl daemon-reload',
-    onlyif    => '/usr/bin/systemctl status wildfly 2>&1 | /usr/bin/grep "changed on disk"',
-    subscribe => File["/usr/lib/systemd/system/wildfly${package_version}.service"]
+      exec { "reload systemctl /usr/lib/systemd/system/wildfly${package_version}.service":
+        command   => '/bin/systemctl daemon-reload',
+        onlyif    => '/usr/bin/systemctl status wildfly 2>&1 | /usr/bin/grep "changed on disk"',
+        subscribe => File["/usr/lib/systemd/system/wildfly${package_version}.service"]
+      }
+    }
   }
 
   file { '/etc/wildfly.conf':
