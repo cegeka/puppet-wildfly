@@ -89,10 +89,6 @@ if [ ! -z "$JBOSS_USER" ]; then
 fi
 
 start() {
-	if [ -f ${MAINTENANCE_FILE} ]; then
-		echo -n "WildFly is in Maintenance Mode"
-		echo
-	else
 		echo -n "Starting $prog: "
 		if [ -f $JBOSS_PIDFILE ]; then
 			read ppid < $JBOSS_PIDFILE
@@ -146,7 +142,6 @@ start() {
 		success
 		echo
 		return 0
-	fi
 }
 
 stop() {
@@ -175,10 +170,6 @@ stop() {
 }
 
 status() {
-	if [ -f $MAINTENANCE_FILE ]; then
-		echo -n "Wildfly is in Maintenance Mode"
-		echo && exit 0
-	else
 		if [ -f $JBOSS_PIDFILE ]; then
 			read ppid < $JBOSS_PIDFILE
 			if [ `ps --pid $ppid 2> /dev/null | grep -c $ppid 2> /dev/null` -eq '1' ]; then
@@ -191,7 +182,6 @@ status() {
 		fi
 		echo "$prog is not running"
 		return 3
-	fi
 }
 
 case "$1" in
@@ -208,19 +198,9 @@ case "$1" in
 	status)
 		status
 		;;
-	start-maintenance)
-		echo -n "Starting WildFly Maintenance Mode"
-		echo
-		touch $MAINTENANCE_FILE
-		;;
-	stop-maintenance)
-		echo -n "Ending WildFly Maintenance Mode"
-		echo
-		rm -f $MAINTENANCE_FILE
-		;;
 	*)
 		## If no parameters are given, print which are avaiable.
-		echo "Usage: $0 {start|stop|status|restart|reload|start-maintenance|stop-maintenance}"
+		echo "Usage: $0 {start|stop|status|restart|reload}"
 		exit 1
 		;;
 esac

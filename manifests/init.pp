@@ -11,9 +11,10 @@
 # Sample Usage:
 #
 class wildfly(
-  $ensure = 'running',
   $version = undef,
   $versionlock = false,
+  $service_state = 'running',
+  $service_enable = true,
   $java_home = '/usr/java/latest',
   $jboss_mode = 'standalone',
   $jboss_config = 'standalone',
@@ -25,7 +26,10 @@ class wildfly(
   $jboss_max_perm = '192',
   $jboss_debug = false,
   $jboss_user = 'wildfly',
+  $jboss_group = 'wildfly',
   $jboss_data_dir = '/opt/wildfly',
+  $jboss_shutdown_wait = '60',
+  $jboss_log_dir = undef,
   $users_mgmt = [],
   $newrelic_enabled = false,
   $newrelic_agent_path = ''
@@ -54,15 +58,19 @@ class wildfly(
     jboss_max_perm          => $jboss_max_perm,
     jboss_debug             => $jboss_debug,
     jboss_user              => $jboss_user,
+    jboss_group             => $jboss_group,
     jboss_data_dir          => $jboss_data_dir,
+    jboss_shutdown_wait     => $jboss_shutdown_wait,
+    jboss_log_dir           => $jboss_log_dir,
     users_mgmt              => $users_mgmt,
     newrelic_enabled        => $newrelic_enabled,
     newrelic_agent_path     => $newrelic_agent_path
   }
 
   class { 'wildfly::service':
-    ensure  => $ensure,
-    version => $version
+    ensure  => $service_state,
+    version => $version,
+    enable  => $service_enable
   }
 
   Anchor['wildfly::begin'] -> Class['Wildfly::Package'] -> Class['Wildfly::Config'] ~> Class['Wildfly::Service'] -> Anchor['wildfly::end']
