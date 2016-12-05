@@ -115,7 +115,7 @@ class wildfly::config(
 
   file { "${jboss_base_dir_real}/configuration/${jboss_config}.xml":
     ensure  => file,
-    mode    => '0644',
+    mode    => '0664',
     owner   => $jboss_user,
     group   => $jboss_group,
     replace => false,
