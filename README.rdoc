@@ -1,5 +1,5 @@
 = puppet-wildfly module
 
-{<img src='https://codex.cegeka.be/jenkins/job/puppet-wildfly/badge/icon' />}[https://codex.cegeka.be/jenkins/job/puppet-wildfly/]
+{<img src='https://jenkins-iac.cegeka.be/job/puppet-wildfly/badge/icon' />}[https://jenkins-iac.cegeka.be/job/puppet-wildfly/]
 
 This is the wildfly module.
