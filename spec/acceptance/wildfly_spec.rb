@@ -59,7 +59,7 @@ describe 'wildfly' do
       apply_manifest(pp, :catch_failures => true)
       apply_manifest(pp, :catch_changes => true)
     end
-    describe package('wildfly') do
+    describe package('wildfly82') do
       it { should be_installed }
     end
   end
