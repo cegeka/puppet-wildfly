@@ -3,3 +3,4 @@
 {<img src='https://jenkins-iac.cegeka.be/job/puppet-wildfly/badge/icon' />}[https://jenkins-iac.cegeka.be/job/puppet-wildfly/]
 
 This is the wildfly module.
+
