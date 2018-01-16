@@ -25,7 +25,7 @@ class wildfly::package(
   }
 
   # Only create rc.d init scripts on rhel < 7
-  if ($operatingsystemmajrelease < 7) {
+  if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
     file { "/etc/init.d/wildfly${package_version}":
       ensure  => file,
       mode    => '0755',
