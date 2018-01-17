@@ -47,7 +47,7 @@ class wildfly::config(
   }
 
   case $::operatingsystemmajrelease {
-    7: {
+    '7:' {
       file { "/usr/lib/systemd/system/wildfly${package_version}.service":
         ensure  => file,
         mode    => '0644',
