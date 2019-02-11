@@ -32,7 +32,7 @@ describe 'wildfly' do
         }
 
         class { 'wildfly':
-          version                 => '8.2.0-2.cgk.el6',
+          version                 => '8.2.0-3.cgk.el7',
           versionlock             => false,
           service_state           => 'running',
           service_enable          => true,
