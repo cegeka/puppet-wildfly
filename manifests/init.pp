@@ -32,7 +32,8 @@ class wildfly(
   $jboss_log_dir = undef,
   $users_mgmt = [],
   $newrelic_enabled = false,
-  $newrelic_agent_path = ''
+  $newrelic_agent_path = '',
+  $gc_disabled = false
 ){
 
   include stdlib
@@ -64,7 +65,8 @@ class wildfly(
     jboss_log_dir           => $jboss_log_dir,
     users_mgmt              => $users_mgmt,
     newrelic_enabled        => $newrelic_enabled,
-    newrelic_agent_path     => $newrelic_agent_path
+    newrelic_agent_path     => $newrelic_agent_path,
+    gc_disabled             => $gc_disabled
   }
 
   class { 'wildfly::service':

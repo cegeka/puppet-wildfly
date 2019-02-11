@@ -44,3 +44,6 @@ JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,address=8787,server=y,s
 <%- if @newrelic_enabled -%>
 JAVA_OPTS="$JAVA_OPTS -javaagent:<%= @newrelic_agent_path %>"
 <%- end -%>
+<%- if @gc_disabled -%>
+JAVA_OPTS="$JAVA_OPTS -XX:+DisableExplicitGC"
+<%- end -%>

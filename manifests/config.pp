@@ -17,7 +17,8 @@ class wildfly::config(
   $jboss_log_dir = undef,
   $users_mgmt = [],
   $newrelic_enabled = false,
-  $newrelic_agent_path = ''
+  $newrelic_agent_path = '',
+  $gc_disabled = false
 ){
 
   validate_re($version, '^[~+._0-9a-zA-Z:-]+$')
@@ -25,6 +26,7 @@ class wildfly::config(
   validate_re($jboss_config, '^standalone$|^standalone-full$|^standalone-ha$|^standalone-full-ha$')
   validate_bool($jboss_debug)
   validate_bool($newrelic_enabled)
+  validate_bool($gc_disabled)
 
   $wildfly_full_version = regsubst($version, '^(\d+\.\d+\.\d+).*','\1')
   $wildfly_major_version = regsubst($version, '^(\d+\.\d+).*','\1')

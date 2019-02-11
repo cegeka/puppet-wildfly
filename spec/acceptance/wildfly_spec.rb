@@ -52,6 +52,7 @@ describe 'wildfly' do
           jboss_shutdown_wait     => '60',
           jboss_log_dir           => '/data/logs/wildfly',
           newrelic_enabled        => false,
+          gc_disabled             => false,
         }
       EOS
 
