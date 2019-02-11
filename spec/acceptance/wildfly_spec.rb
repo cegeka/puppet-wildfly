@@ -30,7 +30,11 @@ describe 'wildfly' do
         file { '/data/logs':
           ensure => 'directory'
         }
-
+        
+        package { 'cronie':
+          ensure => 'present'
+        }
+        
         class { 'wildfly':
           version                 => '8.2.0-3.cgk.el7',
           versionlock             => false,
