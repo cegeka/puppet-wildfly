@@ -16,10 +16,10 @@ class wildfly::package(
 
   case $versionlock {
     true: {
-      packagelock { "wildfly${package_version}": }
+      yum::versionlock { "0:wildfly${package_version}-${version}.*": }
     }
     false: {
-      packagelock { "wildfly${package_version}": ensure => absent }
+      yum::versionlock  { "0:wildfly${package_version}-${version}.*": ensure => absent }
     }
     default: { fail('Class[Wildfly::Package]: parameter versionlock must be true or false') }
   }
