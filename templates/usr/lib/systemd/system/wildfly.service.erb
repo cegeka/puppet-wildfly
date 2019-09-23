@@ -6,7 +6,7 @@ Before=httpd.service
 
 [Service]
 Type=simple
-EnvironmentFile=-./etc/sysconfig/wildfly<%= @package_version %>
+EnvironmentFile=-/etc/sysconfig/wildfly<%= @package_version %>
 ExecStart=/opt/wildfly<%= @package_version %>/bin/standalone.sh -c standalone-full.xml
 User=<%= @jboss_user %>
 Restart=no
