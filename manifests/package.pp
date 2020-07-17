@@ -14,14 +14,24 @@ class wildfly::package(
     ensure => $version
   }
 
-  case $versionlock {
-    true: {
-      yum::versionlock { "0:wildfly${package_version}-${version}.*": }
+  if $versionlock {
+    case $::operatingsystemmajrelease {
+      '8':{
+        dnf::versionlock { "0:wildfly${package_version}-${version}.*": }
+      }
+      default: {
+        yum::versionlock { "0:wildfly${package_version}-${version}.*": }
+      }
     }
-    false: {
-      yum::versionlock  { "0:wildfly${package_version}-${version}.*": ensure => absent }
+  } else {
+    case $::operatingsystemmajrelease {
+      '8':{
+        dnf::versionlock { "0:wildfly${package_version}-${version}.*": ensure => absent }
+      }
+      default: {
+        yum::versionlock  { "0:wildfly${package_version}-${version}.*": ensure => absent }
+      }
     }
-    default: { fail('Class[Wildfly::Package]: parameter versionlock must be true or false') }
   }
 
   # Only create rc.d init scripts on rhel < 7
