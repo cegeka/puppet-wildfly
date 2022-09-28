@@ -45,7 +45,8 @@ class wildfly::config(
   file { "/etc/sysconfig/wildfly${package_version}":
     ensure  => file,
     mode    => '0644',
-    content => template("${module_name}/etc/sysconfig/wildfly.erb")
+    content => template("${module_name}/etc/sysconfig/wildfly.erb"),
+    notify  => Service["wildfly${package_version}"],
   }
 
   case $::operatingsystemmajrelease {
