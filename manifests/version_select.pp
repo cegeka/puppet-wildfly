@@ -22,8 +22,9 @@ class wildfly::version_select(
     if $wanted_version != $facts['current_wildfly_version'] {
       transition { 'stop wildfly':
         resource   => Service['wildfly'],
-        attributes => { ensure => stopped },
+        attributes => { ensure => stopped, enable => false },
         prior_to   => [File['/opt/wildfly'],File['/etc/systemd/system/wildfly.service']],
+        require    => Package["wildfly${wanted_version}"],
       }
     }
   }

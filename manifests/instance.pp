@@ -1,27 +1,29 @@
 define wildfly::instance(
-  $version = undef,
-  $versionlock = false,
-  $service_state = 'running',
-  $service_enable = true,
-  $java_home = '/usr/java/latest',
+  $version = $wildfly::version,
+  $versionlock = $wildfly::versionlock,
+  $service_state = $wildfly::service_state,
+  $service_enable =  $wildfly::service_enable,
+  $java_home = $wildfly::java_home,
   $jboss_mode = $wildfly::jboss_mode,
   $jboss_config = $wildfly::jboss_config,
   $jboss_bind_address = $wildfly::jboss_bind_address,
   $jboss_bind_address_mgmt =  $wildfly::jboss_bind_address_mgmt,
-  $jboss_min_mem = '256',
-  $jboss_max_mem = '512',
-  $jboss_perm = '128',
-  $jboss_max_perm = '192',
-  $jboss_debug = false,
-  $jboss_user = 'wildfly',
-  $jboss_group = 'wildfly',
-  $jboss_data_dir = '/opt/wildfly',
-  $jboss_shutdown_wait = '60',
+  $jboss_min_mem = $wildfly::jboss_min_mem,
+  $jboss_max_mem =  $wildfly::jboss_max_mem,
+  $jboss_perm =  $wildfly::jboss_perm,
+  $jboss_max_perm = $wildfly::jboss_max_perm,
+  $jboss_debug = $wildfly::jboss_debug,
+  $jboss_user = $wildfly::jboss_user,
+  $jboss_group = $wildfly::jboss_group,
+  $jboss_data_dir = $wildfly::jboss_data_dir,
+  $jboss_shutdown_wait = $wildfly::jboss_shutdown_wait,
   $jboss_log_dir = $wildfly::jboss_log_dir,
-  $users_mgmt = [],
-  $newrelic_enabled = false,
-  $newrelic_agent_path = '',
-  $gc_disabled = false,
+  $users_mgmt = $wildfly::users_mgmt,
+  $newrelic_enabled = $wildfly::newrelic_enabled,
+  $newrelic_agent_path = $wildfly::newrelic_agent_path,
+  $gc_disabled = $wildfly::gc_disabled,
+  $cpu_quota = $wildfly::cpu_quota,
+  String $umask = $wildfly::umask,
 ) {
 
 
@@ -33,8 +35,6 @@ define wildfly::instance(
   $jboss_config_dir_real = "${jboss_data_dir_real}/${jboss_mode}/configuration"
   $jboss_log_dir_real = $jboss_log_dir
 
-  notice("Would enable wildfly instance with version ${version} and java home ${java_home} and data dir: ${jboss_data_dir_real} and mode: ${jboss_mode} and ${jboss_config}")
-
   package { "wildfly${package_version}":
     ensure => $version,
     name   => "wildfly${package_version}",
@@ -45,6 +45,12 @@ define wildfly::instance(
     mode    => '0644',
     content => template("${module_name}/etc/sysconfig/wildfly.erb"),
     notify  => Service['wildfly'],
+  }
+
+  file { "/usr/lib/systemd/system/wildfly${package_version}.service":
+    ensure  => file,
+    mode    => '0644',
+    content => template("${module_name}/usr/lib/systemd/system/wildfly.service.erb"),
   }
 
   file { $jboss_data_dir_real :
@@ -133,20 +139,45 @@ define wildfly::instance(
     require => File[$jboss_config_dir_real]
   }
 
-if (!defined(Cron["cleanup_old_${jboss_mode}_configuration_files"])){
-  cron { "cleanup_old_${jboss_mode}_configuration_files":
-    ensure  => present,
-    command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type f -mtime +14 -delete",
-    hour    => 2,
-    minute  => 0
+  if (!defined(Cron["cleanup_old_${jboss_mode}_configuration_files"])){
+    cron { "cleanup_old_${jboss_mode}_configuration_files":
+      ensure  => present,
+      command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type f -mtime +14 -delete",
+      hour    => 2,
+      minute  => 0
+    }
   }
-}
-if (!defined(Cron["cleanup_empty_${jboss_mode}_configuration_directories"])){
-  cron { "cleanup_empty_${jboss_mode}_configuration_directories":
-    ensure  => present,
-    command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type d -empty -delete",
-    hour    => 4,
-    minute  => 0
+  if (!defined(Cron["cleanup_empty_${jboss_mode}_configuration_directories"])){
+    cron { "cleanup_empty_${jboss_mode}_configuration_directories":
+      ensure  => present,
+      command => "find ${jboss_config_dir_real}/${jboss_mode}_xml_history -type d -empty -delete",
+      hour    => 4,
+      minute  => 0
+    }
   }
-}
+
+  if $cpu_quota {
+    systemd::service_limits { "wildfly${package_version}.service":
+      limits => {
+        'CPUQuota' => $cpu_quota,
+      },
+      notify => Exec['systemctl daemon-reload'],
+      before => Transition['stop wildfly'],
+    }
+    realize Exec['systemctl daemon-reload']
+  }
+
+  if $umask {
+    systemd::dropin_file { "${package_version}_umask":
+      filename => 'umask.conf',
+      path     => '/usr/lib/systemd/system',
+      unit     => "wildfly${package_version}.service",
+      notify   => [Exec['systemctl daemon-reload'], Service['wildfly']],
+      content  => "[Service]
+UMask=${umask}
+",
+      require  => Package["wildfly${package_version}"],
+      before   => Transition['stop wildfly'],
+    }
+  }
 }

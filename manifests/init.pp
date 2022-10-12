@@ -36,6 +36,8 @@ class wildfly(
   $gc_disabled = false,
   $use_multiple_instances = false,
   $wanted_version = undef,
+  $cpu_quota = undef,
+  Optional[String] $umask = undef,
 ){
 
   include stdlib
