@@ -5,13 +5,23 @@ class wildfly::service(
   $use_multiple_instances = false,
 ) {
 
-  validate_re($ensure, '^running$|^stopped$')
+  validate_re($ensure, '^running$|^stopped$|^unmanaged$')
 
   if $use_multiple_instances {
-    service { 'wildfly':
-      ensure    => $ensure,
-      enable    => $enable,
-      subscribe => File['/opt/wildfly'],
+    case $ensure {
+      'running', 'stopped': {
+        service { 'wildfly':
+          ensure    => $ensure,
+          enable    => $enable,
+          subscribe => File['/opt/wildfly'],
+        }
+      }
+      'unmanaged': {
+        notice('Class[wildfly::service]: service is currently not being managed')
+      }
+      default: {
+        fail('Class[wildfly::service]: parameter ensure must be running, stopped or unmanaged')
+      }
     }
   } else {
 
@@ -27,6 +37,9 @@ class wildfly::service(
           hasstatus  => true,
           hasrestart => true
         }
+      }
+      'unmanaged': {
+        notice('Class[wildfly::service]: service is currently not being managed')
       }
       default: {
         fail('Class[wildfly::service]: parameter ensure must be running, stopped')
