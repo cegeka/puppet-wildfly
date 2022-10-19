@@ -11,6 +11,7 @@
 # Sample Usage:
 #
 class wildfly::version_select(
+  $ensure = undef,
   $wanted_version = undef,
 ){
 
@@ -18,13 +19,17 @@ class wildfly::version_select(
     fail('wildfly::version_select: at least one instance should be defined')
   }
 
-  if is_numeric($facts['current_wildfly_version']){
-    if $wanted_version != $facts['current_wildfly_version'] {
-      transition { 'stop wildfly':
-        resource   => Service['wildfly'],
-        attributes => { ensure => stopped, enable => false },
-        prior_to   => [File['/opt/wildfly'],File['/etc/systemd/system/wildfly.service']],
-        require    => Package["wildfly${wanted_version}"],
+  if $ensure == 'unmanaged' {
+    notice("Class[wildfly::instance]: Current wildfly is ${facts['current_wildfly_version']}. Puppet is configured to not manage the service. It will also not adjust the symlink towards wildfly${wanted_version}")
+  } else {
+    if is_numeric($facts['current_wildfly_version']){
+      if $wanted_version != $facts['current_wildfly_version'] {
+        transition { 'stop wildfly':
+          resource   => Service['wildfly'],
+          attributes => { ensure => stopped, enable => false },
+          prior_to   => [File['/opt/wildfly'],File['/etc/systemd/system/wildfly.service']],
+          require    => Package["wildfly${wanted_version}"],
+        }
       }
     }
   }

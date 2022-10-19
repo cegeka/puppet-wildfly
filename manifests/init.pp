@@ -47,6 +47,7 @@ class wildfly(
       fail('Wildly::init parameter use_multiple_instances has been enabled, but no instances are defined. Profile::iac::wildfly will realize each instance.')
     }else{
       class {'wildfly::version_select':
+        ensure         => $service_state,
         wanted_version => $wanted_version,
       }
       file { $jboss_log_dir :

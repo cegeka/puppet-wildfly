@@ -5,8 +5,6 @@ class wildfly::service(
   $use_multiple_instances = false,
 ) {
 
-  validate_re($ensure, '^running$|^stopped$|^unmanaged$')
-
   if $use_multiple_instances {
     case $ensure {
       'running', 'stopped': {

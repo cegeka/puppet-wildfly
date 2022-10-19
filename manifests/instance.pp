@@ -40,11 +40,15 @@ define wildfly::instance(
     name   => "wildfly${package_version}",
   }
 
+  if $versionlock {
+    dnf::versionlock { "0:wildfly${package_version}-${version}-*.*": }
+  }
+
   file { "/etc/sysconfig/wildfly${package_version}":
     ensure  => file,
     mode    => '0644',
     content => template("${module_name}/etc/sysconfig/wildfly.erb"),
-    notify  => Service['wildfly'],
+    notify  => $service_state ? {'unmanaged' => undef , default => Service['wildfly']}
   }
 
   file { "/usr/lib/systemd/system/wildfly${package_version}.service":
@@ -162,7 +166,7 @@ define wildfly::instance(
         'CPUQuota' => $cpu_quota,
       },
       notify => Exec['systemctl daemon-reload'],
-      before => Transition['stop wildfly'],
+      before => Class['wildfly::version_select'],
     }
     realize Exec['systemctl daemon-reload']
   }
@@ -172,12 +176,12 @@ define wildfly::instance(
       filename => 'umask.conf',
       path     => '/usr/lib/systemd/system',
       unit     => "wildfly${package_version}.service",
-      notify   => [Exec['systemctl daemon-reload'], Service['wildfly']],
+      notify   => Exec['systemctl daemon-reload'],
       content  => "[Service]
 UMask=${umask}
 ",
       require  => Package["wildfly${package_version}"],
-      before   => Transition['stop wildfly'],
+      before   => Class['wildfly::version_select'],
     }
   }
 }
