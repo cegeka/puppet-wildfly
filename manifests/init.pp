@@ -58,9 +58,6 @@ class wildfly(
     }
   } else {
 
-    anchor { 'wildfly::begin': }
-    anchor { 'wildfly::end': }
-
     class { 'wildfly::package':
       version     => $version,
       versionlock => $versionlock
@@ -88,8 +85,6 @@ class wildfly(
       newrelic_agent_path     => $newrelic_agent_path,
       gc_disabled             => $gc_disabled
     }
-
-    Anchor['wildfly::begin'] -> Class['Wildfly::Package'] -> Class['Wildfly::Config'] ~> Class['Wildfly::Service'] -> Anchor['wildfly::end']
   }
 
   class { 'wildfly::service':

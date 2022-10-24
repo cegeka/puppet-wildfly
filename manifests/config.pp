@@ -115,6 +115,10 @@ class wildfly::config(
     require => File[$jboss_config_dir_real]
   }
 
+  # These file permissions have to remain set on 0664.
+  # Ventouris adjusts this config file during a deploy, so it needs it to be group-writable.
+  # However when wildfly restarts and reads the config, it will adjust the permissions to 644.
+  # Puppet will then modify it back to 664, so that ventouris can deploy again.
   file { "${jboss_base_dir_real}/configuration/${jboss_config}.xml":
     ensure  => file,
     mode    => '0664',
