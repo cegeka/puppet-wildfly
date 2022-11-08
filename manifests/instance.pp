@@ -41,7 +41,7 @@ define wildfly::instance(
   }
 
   if $versionlock {
-    dnf::versionlock { "0:wildfly${package_version}-${version}-*.*": }
+    yum::versionlock { "0:wildfly${package_version}-${version}-*.*": }
   }
 
   file { "/etc/sysconfig/wildfly${package_version}":

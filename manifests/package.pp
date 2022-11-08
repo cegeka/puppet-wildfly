@@ -9,27 +9,29 @@ class wildfly::package(
   $wildfly_full_version = regsubst($version, '^(\d+\.\d+\.\d+).*','\1')
   $wildfly_major_version = regsubst($version, '^(\d+\.\d+).*','\1')
   $package_version = regsubst($wildfly_major_version, '\.', '', 'G')
+  $release = regsubst($version, '^(\d+\.\d+\.\d+)-(\d+.\w+.*)','\2')
+
+  $bool_versionlock = $versionlock ? {
+    true  => 'present',
+    false => 'absent',
+  }
 
   package { "wildfly${package_version}":
     ensure => $version
   }
 
-  if $versionlock {
-    case $::operatingsystemmajrelease {
-      '8':{
-        dnf::versionlock { "0:wildfly${package_version}-${version}.*": }
-      }
-      default: {
-        yum::versionlock { "0:wildfly${package_version}-${version}.*": }
+  case $::operatingsystemmajrelease {
+    '8':{
+      yum::versionlock { 'wildfly':
+        ensure  => $bool_versionlock,
+        version => $package_version,
+        release => $release,
+        epoch   => 0,
       }
     }
-  } else {
-    case $::operatingsystemmajrelease {
-      '8':{
-        dnf::versionlock { "0:wildfly${package_version}-${version}.*": ensure => absent }
-      }
-      default: {
-        yum::versionlock  { "0:wildfly${package_version}-${version}.*": ensure => absent }
+    default: {
+      yum::versionlock { "0:wildfly${package_version}-${version}.*":
+        ensure => $bool_versionlock
       }
     }
   }
