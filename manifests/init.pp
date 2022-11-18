@@ -43,19 +43,20 @@ class wildfly(
   include stdlib
 
   if $use_multiple_instances {
-    if !defined('wildfly::instance') {
-      fail('Wildly::init parameter use_multiple_instances has been enabled, but no instances are defined. Profile::iac::wildfly will realize each instance.')
-    }else{
+
+    if $wanted_version {
       class {'wildfly::version_select':
         ensure         => $service_state,
         wanted_version => $wanted_version,
       }
-      file { $jboss_log_dir :
-        ensure => directory,
-        owner  => $jboss_user,
-        group  => $jboss_group
-      }
     }
+
+    file { $jboss_log_dir :
+      ensure => directory,
+      owner  => $jboss_user,
+      group  => $jboss_group
+    }
+
   } else {
 
     class { 'wildfly::package':

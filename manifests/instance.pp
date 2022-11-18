@@ -40,8 +40,25 @@ define wildfly::instance(
     name   => "wildfly${package_version}",
   }
 
-  if $versionlock {
-    yum::versionlock { "0:wildfly${package_version}-${version}-*.*": }
+  $bool_versionlock = $versionlock ? {
+    true  => 'present',
+    false => 'absent',
+  }
+
+  case $::operatingsystemmajrelease {
+    '8':{
+        yum::versionlock { "wildfly${package_version}":
+          ensure  => $bool_versionlock,
+          version => $version,
+          release => '*',
+          epoch   => 0,
+        }
+      }
+    default: {
+      yum::versionlock { "0:wildfly${package_version}-${version}.*":
+        ensure => $bool_versionlock
+      }
+    }
   }
 
   file { "/etc/sysconfig/wildfly${package_version}":
