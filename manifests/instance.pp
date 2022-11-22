@@ -179,10 +179,11 @@ define wildfly::instance(
 
   if $cpu_quota {
     systemd::service_limits { "wildfly${package_version}.service":
-      limits => {
+      limits          => {
         'CPUQuota' => $cpu_quota,
       },
-      notify => Exec['systemctl daemon-reload']
+      restart_service => false,
+      notify          => Exec['systemctl daemon-reload']
     }
     realize Exec['systemctl daemon-reload']
   }
