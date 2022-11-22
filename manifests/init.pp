@@ -44,7 +44,7 @@ class wildfly(
 
   if $use_multiple_instances {
 
-    if $wanted_version {
+    if $wanted_version != undef {
       class {'wildfly::version_select':
         ensure         => $service_state,
         wanted_version => $wanted_version,

@@ -182,8 +182,7 @@ define wildfly::instance(
       limits => {
         'CPUQuota' => $cpu_quota,
       },
-      notify => Exec['systemctl daemon-reload'],
-      before => Class['wildfly::version_select'],
+      notify => Exec['systemctl daemon-reload']
     }
     realize Exec['systemctl daemon-reload']
   }
@@ -197,8 +196,7 @@ define wildfly::instance(
       content  => "[Service]
 UMask=${umask}
 ",
-      require  => Package["wildfly${package_version}"],
-      before   => Class['wildfly::version_select'],
+      require  => Package["wildfly${package_version}"]
     }
   }
 }
