@@ -11,7 +11,6 @@ class wildfly::service(
         service { 'wildfly':
           ensure    => $ensure,
           enable    => $enable,
-          subscribe => File['/opt/wildfly'],
         }
       }
       'unmanaged': {
