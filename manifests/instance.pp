@@ -36,6 +36,9 @@ define wildfly::instance(
   $jboss_config_dir_real = "${jboss_data_dir_real}/${jboss_mode}/configuration"
   $jboss_log_dir_real = $jboss_log_dir
 
+  $ensure_file = $ensure ? {'absent' => absent , default => file }
+  $ensure_directory = $ensure ? {'absent' => absent , default => directory }
+
   package { "wildfly${package_version}":
     ensure => $ensure ? {'absent' => absent , default => $version },
     name   => "wildfly${package_version}",
@@ -63,27 +66,27 @@ define wildfly::instance(
   }
 
   file { "/etc/sysconfig/wildfly${package_version}":
-    ensure  => $ensure ? {'absent' => absent , default => file },
+    ensure  => $ensure_file,
     mode    => '0644',
     content => template("${module_name}/etc/sysconfig/wildfly.erb"),
     notify  => $service_state ? {'unmanaged' => undef , default => Service['wildfly']}
   }
 
   file { "/usr/lib/systemd/system/wildfly${package_version}.service":
-    ensure  => $ensure ? {'absent' => absent , default => file },
+    ensure  => $ensure_file,
     mode    => '0644',
     content => template("${module_name}/usr/lib/systemd/system/wildfly.service.erb"),
   }
 
   file { $jboss_data_dir_real :
-    ensure => $ensure ? {'absent' => absent , default => directory },
+    ensure => $ensure_directory,
     owner  => $jboss_user,
     group  => $jboss_group,
     force  => true,
   }
 
   file { $jboss_base_dir_real :
-    ensure  => $ensure ? {'absent' => absent , default => directory },
+    ensure  => $ensure_directory,
     owner   => $jboss_user,
     group   => $jboss_group,
     require => File[$jboss_data_dir_real],
@@ -91,7 +94,7 @@ define wildfly::instance(
   }
 
   file { "${jboss_base_dir_real}/deployments" :
-    ensure  => $ensure ? {'absent' => absent , default => directory },
+    ensure  => $ensure_directory,
     owner   => $jboss_user,
     group   => $jboss_group,
     require => File[$jboss_base_dir_real],
@@ -99,7 +102,7 @@ define wildfly::instance(
   }
 
   file { $jboss_config_dir_real :
-    ensure  => $ensure ? {'absent' => absent , default => directory },
+    ensure  => $ensure_directory,
     owner   => $jboss_user,
     group   => $jboss_group,
     require => File[$jboss_base_dir_real],
@@ -107,7 +110,7 @@ define wildfly::instance(
   }
 
   file { "${jboss_base_dir_real}/configuration/mgmt-users.properties":
-    ensure  => $ensure ? {'absent' => absent , default => file },
+    ensure  => $ensure_file,
     mode    => '0644',
     owner   => $jboss_user,
     group   => $jboss_group,
@@ -116,7 +119,7 @@ define wildfly::instance(
   }
 
   file { "${jboss_base_dir_real}/configuration/mgmt-groups.properties":
-    ensure  => $ensure ? {'absent' => absent , default => file },
+    ensure  => $ensure_file,
     mode    => '0644',
     owner   => $jboss_user,
     group   => $jboss_group,
@@ -126,7 +129,7 @@ define wildfly::instance(
   }
 
   file { "${jboss_base_dir_real}/configuration/${jboss_config}.xml":
-    ensure  => $ensure ? {'absent' => absent , default => file },
+    ensure  => $ensure_file,
     mode    => '0664',
     owner   => $jboss_user,
     group   => $jboss_group,
@@ -136,7 +139,7 @@ define wildfly::instance(
   }
 
   file { "${jboss_base_dir_real}/configuration/logging.properties":
-    ensure  => $ensure ? {'absent' => absent , default => file },
+    ensure  => $ensure_file,
     mode    => '0644',
     owner   => $jboss_user,
     group   => $jboss_group,
@@ -146,7 +149,7 @@ define wildfly::instance(
   }
 
   file { "${jboss_base_dir_real}/configuration/application-users.properties":
-    ensure  => $ensure ? {'absent' => absent , default => file },
+    ensure  => $ensure_file,
     mode    => '0644',
     owner   => $jboss_user,
     group   => $jboss_group,
@@ -156,7 +159,7 @@ define wildfly::instance(
   }
 
   file { "${jboss_base_dir_real}/configuration/application-roles.properties":
-    ensure  => $ensure ? {'absent' => absent , default => file },
+    ensure  => $ensure_file,
     mode    => '0644',
     owner   => $jboss_user,
     group   => $jboss_group,
