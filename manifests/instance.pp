@@ -40,8 +40,13 @@ define wildfly::instance(
   $ensure_directory = $ensure ? {'absent' => absent , default => directory }
 
   package { "wildfly${package_version}":
-    ensure => $ensure ? {'absent' => absent , default => $version },
-    name   => "wildfly${package_version}",
+    ensure  => $ensure ? {'absent' => absent , default => $version },
+    name    => "wildfly${package_version}",
+    require => $::operatingsystemmajrelease ? {'8' => Yum::Versionlock["wildfly${package_version}"], default => Yum::Versionlock["0:wildfly${package_version}-${version}.*"] },
+    before  => [
+      File["/etc/sysconfig/wildfly${package_version}"],
+      File["/usr/lib/systemd/system/wildfly${package_version}.service"]
+    ]
   }
 
   $bool_versionlock = $versionlock ? {
@@ -69,13 +74,15 @@ define wildfly::instance(
     ensure  => $ensure_file,
     mode    => '0644',
     content => template("${module_name}/etc/sysconfig/wildfly.erb"),
-    notify  => $service_state ? {'unmanaged' => undef , default => Service['wildfly']}
+    notify  => $service_state ? {'unmanaged' => undef , default => Service['wildfly']},
+    require => Package["wildfly${package_version}"],
   }
 
   file { "/usr/lib/systemd/system/wildfly${package_version}.service":
     ensure  => $ensure_file,
     mode    => '0644',
     content => template("${module_name}/usr/lib/systemd/system/wildfly.service.erb"),
+    notify  => Exec['systemctl daemon-reload'],
   }
 
   file { $jboss_data_dir_real :
