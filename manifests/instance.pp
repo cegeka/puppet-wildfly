@@ -25,8 +25,8 @@ define wildfly::instance(
   $gc_disabled = $wildfly::gc_disabled,
   $cpu_quota = $wildfly::cpu_quota,
   String $umask = $wildfly::umask,
-) {
 
+) {
 
   $wildfly_major_version = regsubst($version, '^(\d+)\.\d+.*','\1') # returns e.g. 26
   $package_version = "${wildfly_major_version}0" # returns e.g. 260
@@ -43,6 +43,7 @@ define wildfly::instance(
     ensure  => $ensure ? {'absent' => absent , default => $version },
     name    => "wildfly${package_version}",
     require => $::operatingsystemmajrelease ? {'8' => Yum::Versionlock["wildfly${package_version}"], default => Yum::Versionlock["0:wildfly${package_version}-${version}.*"] },
+    notify  => $wildfly::notify_service ? {true => Service['wildfly'], default => undef},
     before  => [
       File["/etc/sysconfig/wildfly${package_version}"],
       File["/usr/lib/systemd/system/wildfly${package_version}.service"]

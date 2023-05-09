@@ -15,6 +15,7 @@ class wildfly(
   $versionlock = false,
   $service_state = 'running',
   $service_enable = true,
+  $notify_service = false,
   $java_home = '/usr/java/latest',
   $jboss_mode = 'standalone',
   $jboss_config = 'standalone',
@@ -89,10 +90,9 @@ class wildfly(
   }
 
   class { 'wildfly::service':
-    ensure                 => $service_state,
-    version                => $version,
-    enable                 => $service_enable,
-    use_multiple_instances => $use_multiple_instances,
+    ensure  => $service_state,
+    version => $version,
+    enable  => $service_enable,
   }
 
 }
