@@ -51,5 +51,4 @@ class wildfly::version_select(
     require => Package["wildfly${wanted_version}"]
   }
 
-  realize Exec['systemctl daemon-reload']
 }
