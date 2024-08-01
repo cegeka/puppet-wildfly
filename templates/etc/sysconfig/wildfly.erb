@@ -42,7 +42,11 @@ JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,address=*:8787,server=y
 <%- end -%>
 <%- if @newrelic_enabled -%>
 JAVA_OPTS="$JAVA_OPTS -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS,com.newrelic -Djava.awt.headless=true"
+<%- if @newrelic_jboss_fix -%>
+JAVA_OPTS="$JAVA_OPTS -javaagent:<%= @newrelic_agent_path %> -Dcom.newrelic.jboss.jsr77.fix=true"
+<%- else -%>
 JAVA_OPTS="$JAVA_OPTS -javaagent:<%= @newrelic_agent_path %>"
+<%- end -%>
 <%- else -%>
 JAVA_OPTS="$JAVA_OPTS -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS -Djava.awt.headless=true"
 <%- end -%>

@@ -21,6 +21,7 @@ define wildfly::instance(
   $jboss_log_dir = $wildfly::jboss_log_dir,
   $users_mgmt = $wildfly::users_mgmt,
   $newrelic_enabled = $wildfly::newrelic_enabled,
+  $newrelic_jboss_fix = $wildfly::newrelic_jboss_fix,
   $newrelic_agent_path = $wildfly::newrelic_agent_path,
   $gc_disabled = $wildfly::gc_disabled,
   $cpu_quota = $wildfly::cpu_quota,

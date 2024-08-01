@@ -33,6 +33,7 @@ class wildfly(
   $jboss_log_dir = "${jboss_data_dir}/${jboss_mode}/log",
   $users_mgmt = [],
   $newrelic_enabled = false,
+  $newrelic_jboss_fix = false,
   $newrelic_agent_path = '',
   $gc_disabled = false,
   $use_multiple_instances = false,
@@ -84,6 +85,7 @@ class wildfly(
       jboss_log_dir           => $jboss_log_dir,
       users_mgmt              => $users_mgmt,
       newrelic_enabled        => $newrelic_enabled,
+      newrelic_jboss_fix      => $newrelic_jboss_fix,
       newrelic_agent_path     => $newrelic_agent_path,
       gc_disabled             => $gc_disabled
     }
