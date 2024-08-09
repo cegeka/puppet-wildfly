@@ -50,7 +50,7 @@ class wildfly::config(
     content => template("${module_name}/etc/sysconfig/wildfly.erb")
   }
 
-  case $::operatingsystemmajrelease {
+  case $facts['os']['release']['major'] {
     '7','8': {
       file { "/usr/lib/systemd/system/wildfly${package_version}.service":
         ensure  => file,

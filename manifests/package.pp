@@ -20,7 +20,7 @@ class wildfly::package(
     ensure => $version
   }
 
-  case $::operatingsystemmajrelease {
+  case $facts['os']['release']['major'] {
     '8':{
       yum::versionlock { 'wildfly':
         ensure  => $bool_versionlock,
@@ -37,7 +37,7 @@ class wildfly::package(
   }
 
   # Only create rc.d init scripts on rhel < 7
-  if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
+  if (versioncmp($facts['os']['release']['major'], '7') < 0) {
     file { "/etc/init.d/wildfly${package_version}":
       ensure  => file,
       mode    => '0755',

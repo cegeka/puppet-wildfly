@@ -43,7 +43,7 @@ define wildfly::instance(
   package { "wildfly${package_version}":
     ensure  => $ensure ? {'absent' => absent , default => $version },
     name    => "wildfly${package_version}",
-    require => $::operatingsystemmajrelease ? {'8' => Yum::Versionlock["wildfly${package_version}"], default => Yum::Versionlock["0:wildfly${package_version}-${version}.*"] },
+    require => $facts['os']['release']['major'] ? {'8' => Yum::Versionlock["wildfly${package_version}"], default => Yum::Versionlock["0:wildfly${package_version}-${version}.*"] },
     notify  => $wildfly::notify_service ? {true => Service['wildfly'], default => undef},
     before  => [
       File["/etc/sysconfig/wildfly${package_version}"],
@@ -56,7 +56,7 @@ define wildfly::instance(
     false => 'absent',
   }
 
-  case $::operatingsystemmajrelease {
+  case $facts['os']['release']['major'] {
     '8':{
         yum::versionlock { "wildfly${package_version}":
           ensure  => $bool_versionlock,
