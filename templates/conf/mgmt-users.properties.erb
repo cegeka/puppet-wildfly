@@ -21,7 +21,7 @@
 # is for illustration only and does not correspond to a usable password.
 #
 <% @users_mgmt.each do |value_hash| %>
-<%= value_hash['username'] %>=<%= value_hash['password'] %>
+<%= value_hash['username'] %>=<%= value_hash['password_hash'] %>
 <% end %>
 #
 #$REALM_NAME=ManagementRealm$ This line is used by the add-user utility to identify the realm name already used in this file.
